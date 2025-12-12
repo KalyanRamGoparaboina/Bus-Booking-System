@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Bus Booking System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search_results.css') }}">
+    <script src="{{ url_for('static', filename='js/search_results.js') }}" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bus Booking System</h1>
+            <a href="{{ url_for('home') }}" class="back-btn">Back to Home</a>
+        </div>
+    </header>
+
+    <section class="search-summary">
+        <div class="container">
+            <h2>Available Buses from {{ source.title() }} to {{ destination.title() }} on {{ date }}</h2>
+            <div id="bus-list" class="bus-listing">
+                {% if buses %}
+                    {% for bus in buses %}
+                        <div class="bus-card" data-bus-id="{{ bus.id }}">
+                            <div class="bus-header">
+                                <h3>{{ bus.name }} ({{ bus.amenities }})</h3>
+                                <p class="date">{{ bus.departure.split(' ')[0] }}</p>
+                            </div>
+                            <div class="bus-body">
+                                <p class="type">{{ bus.type }}</p>
+                                <div class="schedule">
+                                    <span class="departure-time">{{ bus.departure.split(' ')[1] }}</span>
+                                    <span class="duration">— {{ bus.duration }} Hrs —</span>
+                                    <span class="arrival-time">{{ bus.arrival.split(' ')[1] }}</span>
+                                </div>
+                                <div class="start-price">
+                                    <span class="start">Starting at {{ bus.source }}</span>
+                                    <span class="price">₹{{ bus.price }}</span>
+                                </div>
+                            </div>
+                            <div class="bus-footer">
+                                <div class="bus-features">
+                                    <span class="ratings" data-rating="{{ bus.ratings }}">Ratings: {{ bus.ratings }}</span>
+                                    <span class="tracking" data-tracking="{{ bus.tracking }}">Live Tracking</span>
+                                    <span class="amenities">Amenities: {{ bus.amenities }}</span>
+                                </div>
+                                <div class="seat-info">
+                                    <span class="seats-available">{{ bus.available_seats }} Seats Available</span>
+                                    <a href="{{ url_for('seat_selection', bus_id=bus.id) }}" class="select-seats-btn">Show Seats</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No buses available for the selected route and date.</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-color"></div>
+    </footer>
+</body>
+</html>

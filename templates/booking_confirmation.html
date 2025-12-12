@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - Bus Booking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #004d99;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            max-width: 1200px;
+        }
+        .back-btn {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-btn:hover {
+            background-color: #005bb5;
+        }
+        .confirmation-container {
+            padding: 20px 0;
+        }
+        .confirmation {
+            max-width: 600px;
+            margin: auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .confirmation p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bus Booking System</h1>
+            <a href="/"><button class="back-btn">Back to Home</button></a>
+        </div>
+    </header>
+
+    <section class="confirmation-container">
+        <div class="container">
+            <div class="confirmation">
+                <h2>Booking Confirmation</h2>
+                <p><strong>Transaction ID:</strong> {{ transaction_id }}</p>
+                <p><strong>Total Amount:</strong> ₹{{ total_amount }}</p>
+                <p><strong>Selected Seats:</strong> {{ selected_seats|join(', ') }}</p>
+                <p><strong>Name:</strong> {{ name }}</p>
+                <p><strong>Email:</strong> {{ email }}</p>
+                <p><strong>Phone Number:</strong> {{ phone_number }}</p>
+                
+                <p>Thank you for booking with us</p>
+                <p>Get In Touch!!!</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

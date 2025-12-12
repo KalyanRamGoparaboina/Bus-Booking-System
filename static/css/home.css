@@ -1,0 +1,193 @@
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(135deg, #34495e 50%, #2c3e50 50%);
+    color: #ffffff;
+    padding: 15px 0;
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 0.15);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+}
+
+header h1:hover {
+    color: #2ecc71;
+}
+
+header nav {
+    display: flex;
+    gap: 20px;
+}
+
+header nav .auth-btn, header nav .home-btn {
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s;
+}
+
+/* Home Button Styles */
+header nav .home-btn {
+    background-color: #e74c3c; /* Red shade for the Home button */
+    color: white; /* Ensure the text is white */
+}
+
+header nav .home-btn:hover {
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Auth Button Styles */
+header nav .auth-btn {
+    background-color: #27ae60;
+    color: white;
+}
+
+header nav .auth-btn:hover {
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(45deg, #27ae60, #2980b9);
+    color: #ffffff;
+    text-align: center;
+    padding: 60px 20px;
+    margin-top: 75px;
+    position: relative;
+}
+
+.hero h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    animation: slideInDown 1s ease-in-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero p {
+    font-size: 1.5rem;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    opacity: 0.8;
+}
+
+/* Call to Action Button */
+.hero .cta-btn {
+    background-color: #e74c3c;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s;
+    cursor: pointer;
+}
+
+.hero .cta-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-5px);
+}
+
+/* Search Section */
+.search-section {
+    background-color: #ecf0f1;
+    padding: 10px 0;
+    margin-top: -20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 100;
+}
+
+.search-section h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-form select, .search-form input, .search-form button {
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 1px solid #bdc3c7;
+    font-size: 1rem;
+}
+
+.search-form select {
+    width: 200px;
+}
+
+.search-form button {
+    background-color: #27ae60;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.search-form button:hover {
+    background-color: #2ecc71;
+    transform: translateY(-3px);
+}
+
+/* Footer */
+footer {
+    background-color: #2c3e50;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 60px;
+}
+
+footer p {
+    font-size: 1rem;
+}
