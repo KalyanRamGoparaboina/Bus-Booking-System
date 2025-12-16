@@ -1,0 +1,6 @@
+*.pyc
+__pycache__/
+instance/
+.env
+.vscode/
+data/buses.json

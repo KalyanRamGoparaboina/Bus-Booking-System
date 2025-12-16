@@ -1,0 +1,131 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
+}
+
+header h1 {
+    margin: 0;
+    text-align: center;
+}
+
+.back-btn {
+    color: #fff;
+    text-decoration: none;
+    background: #444;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.search-summary h2 {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.bus-listing {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bus-card {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bus-header {
+    background: #333;
+    color: #fff;
+    padding: 15px;
+}
+
+.bus-header h3 {
+    margin: 0;
+}
+
+.date {
+    font-size: 14px;
+}
+
+.bus-body {
+    padding: 15px;
+}
+
+.schedule {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.start-price {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.start {
+    font-size: 14px;
+    color: #333;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.bus-footer {
+    background: #eee;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bus-features {
+    display: flex;
+    gap: 10px;
+}
+
+.ratings,
+.tracking,
+.amenities {
+    font-size: 14px;
+}
+
+.seat-info {
+    text-align: right;
+}
+
+.select-seats-btn {
+    background: #28a745;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.select-seats-btn:hover {
+    background: #218838;
+}
+
+.footer-color {
+    background: #333;
+    height: 50px;
+}

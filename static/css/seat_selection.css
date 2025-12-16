@@ -1,0 +1,128 @@
+/* Seat Selection Page Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.back-btn {
+    background-color: #ffffff;
+    color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.back-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.seat-selection {
+    margin: 20px 0;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.bus-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.seat-map {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.seat-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.seat {
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.seat.available {
+    background-color: #d4edda;
+}
+
+.seat.selected {
+    background-color: #cce5ff;
+}
+
+.seat.occupied {
+    background-color: #f5c6cb;
+    cursor: not-allowed;
+}
+
+.seat-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.seat-type {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.seat-type div {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+.confirm-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: block;
+    margin: auto;
+    transition: background-color 0.3s;
+}
+
+.confirm-btn:hover {
+    background-color: #0056b3;
+}
+
+.footer-color {
+    background-color: #007bff; /* Change this color as needed */
+    height: 50px;
+}

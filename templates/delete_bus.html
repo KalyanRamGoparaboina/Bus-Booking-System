@@ -1,0 +1,25 @@
+<!-- templates/admin/delete_bus.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Bus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='delete_bus.css') }}">
+</head>
+<body>
+    <h1>Delete a Bus</h1>
+    <form method="post">
+        <label for="bus_id">Select Bus to Delete:</label>
+        <select id="bus_id" name="bus_id" required>
+            <!-- Populate this list with bus options from your database -->
+            {% for bus in buses %}
+                <option value="{{ bus.id }}">{{ bus.name }} - {{ bus.source }} to {{ bus.destination }}</option>
+            {% endfor %}
+        </select><br><br>
+        
+        <input type="submit" value="Delete Bus">
+    </form>
+    <a href="{{ url_for('list_buses') }}">Back to Bus List</a>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Bus Booking System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <script src="{{ url_for('static', filename='js/home.js') }}" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bus Booking System</h1>
+            <nav>
+                <a href="/" class="home-btn">Home</a> <!-- Styled Home button -->
+                {% if 'username' in session %}
+                    <span>Welcome, {{ session['username'] }}!</span>
+                    <form action="{{ url_for('logout') }}" method="POST" style="display:inline;">
+                        <button type="submit" class="auth-btn">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="/login" class="auth-btn">Login</a>
+                    <a href="/register" class="auth-btn">Sign Up</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Travel with Comfort and Ease</h2>
+            <p>Find the best bus routes, book tickets, and enjoy a smooth journey.</p>
+        </div>
+    </section>
+
+    <section class="search-section">
+        <div class="container">
+            <h2>Find Your Bus</h2>
+            <form class="search-form" action="{{ url_for('search') }}" method="POST">
+                <select name="source" required>
+                    <option value="" disabled selected>Select Source</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Chennai">Chennai</option>
+                </select>
+                <select name="destination" required>
+                    <option value="" disabled selected>Select Destination</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Chennai">Chennai</option>
+                </select>
+                <input type="date" name="date" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Bus Booking System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

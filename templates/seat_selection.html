@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seat Selection - Bus Booking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #004d99;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            max-width: 1200px;
+        }
+        .back-btn {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-btn:hover {
+            background-color: #005bb5;
+        }
+        .seat-selection {
+            padding: 20px 0;
+        }
+        .seat-map {
+            display: flex;
+            flex-direction: column;
+        }
+        .seat-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .seat {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            margin: 2px;
+            cursor: pointer;
+        }
+        .seat.available { background-color: #e0e0e0; }
+        .seat.selected { background-color: #66c2ff; }
+        .seat.occupied { background-color: #ff4c4c; cursor: not-allowed; }
+        .seat-filters {
+            margin: 20px 0;
+        }
+        .filter-btn {
+            margin: 5px;
+            padding: 10px;
+            background-color: #004d99;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .filter-btn:hover {
+            background-color: #003d80;
+        }
+        .seat-info {
+            margin: 10px 0;
+        }
+        .seat-info .seat-type {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .seat-info .seat-type div {
+            width: 40px;
+            height: 40px;
+            margin-right: 5px;
+        }
+        .price-info {
+            margin: 20px 0;
+        }
+        .confirm-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .confirm-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bus Booking System</h1>
+            <a href="/"><button class="back-btn">Back to Home</button></a>
+        </div>
+    </header>
+
+    <section class="seat-selection">
+        <div class="container">
+            <h2>Select Your Seats</h2>
+
+            <div class="bus-info">
+                <p><strong>Bus:</strong> {{ bus.name }}</p>
+                <p><strong>Departure:</strong> {{ bus.departure }}</p>
+                <p><strong>Arrival:</strong> {{ bus.arrival }}</p>
+            </div>
+
+            <form method="POST" action="/seat_selection/{{ bus.id }}">
+                <div class="seat-map">
+                    {% for row in range(1, 7) %}
+                        <div class="seat-row">
+                            {% for seat in ['A', 'B', 'C', 'D'] %}
+                                <div class="seat available" data-seat="{{ row }}{{ seat }}"
+                                     data-price="{{ bus.price }}" data-type="Standard">
+                                    {{ row }}{{ seat }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="seat-info">
+                    <div class="seat-type">
+                        <div class="seat available"></div> Available
+                    </div>
+                    <div class="seat-type">
+                        <div class="seat selected"></div> Selected
+                    </div>
+                    <div class="seat-type">
+                        <div class="seat occupied"></div> Occupied
+                    </div>
+                </div>
+
+                <div class="price-info">
+                    <p>Total Price: ₹<span id="total-price">0</span></p>
+                </div>
+
+                <input type="hidden" name="selected_seats" id="selected_seats">
+                <input type="hidden" name="total_amount" id="total_amount">
+                <input type="hidden" name="pickup_location" id="form_pickup_location">
+                <input type="hidden" name="drop_location" id="form_drop_location">
+                <button class="confirm-btn" type="submit">Confirm Selection</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const seatElements = document.querySelectorAll('.seat');
+            const totalPriceElement = document.getElementById('total-price');
+            const selectedSeatsInput = document.getElementById('selected_seats');
+            const totalAmountInput = document.getElementById('total_amount');
+            let totalPrice = 0;
+            let selectedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
+            const seatElementsMap = {};
+
+            // Initialize seat elements map and state
+            seatElements.forEach(seat => {
+                const seatId = seat.getAttribute('data-seat');
+                seatElementsMap[seatId] = seat;
+                if (selectedSeats.includes(seatId)) {
+                    seat.classList.add('selected');
+                    seat.classList.remove('available');
+                }
+            });
+
+            seatElements.forEach(seat => {
+                seat.addEventListener('click', function() {
+                    const price = parseInt(this.getAttribute('data-price'), 10);
+                    const seatId = this.getAttribute('data-seat');
+
+                    if (this.classList.contains('available')) {
+                        this.classList.add('selected');
+                        this.classList.remove('available');
+                        totalPrice += price;
+                        selectedSeats.push(seatId);
+                    } else if (this.classList.contains('selected')) {
+                        this.classList.add('available');
+                        this.classList.remove('selected');
+                        totalPrice -= price;
+                        selectedSeats = selectedSeats.filter(id => id !== seatId);
+                    }
+
+                    totalPriceElement.textContent = totalPrice;
+                    selectedSeatsInput.value = selectedSeats.join(',');
+                    totalAmountInput.value = totalPrice;
+                    localStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+                });
+            });
+
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    seatElements.forEach(seat => {
+                        if (filter === 'all' || seat.getAttribute('data-type') === filter) {
+                            seat.style.display = 'block';
+                        } else {
+                            seat.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
