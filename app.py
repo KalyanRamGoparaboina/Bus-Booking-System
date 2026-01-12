@@ -350,14 +350,19 @@ def booking_confirmation():
             if 'date_bookings' not in bus: bus['date_bookings'] = {}
             if date_str not in bus['date_bookings']: bus['date_bookings'][date_str] = []
             
-            # Save seat numbers for fast lookup
-            bus['date_bookings'][date_str].extend(selected_seats)
-            
-            # Save full details for admin
+            # Save/Update full details for admin
             if 'detailed_bookings' not in bus: bus['detailed_bookings'] = {}
             if date_str not in bus['detailed_bookings']: bus['detailed_bookings'][date_str] = {}
+            
+            # Check if we already processed these seats to avoid duplication on refresh
+            all_already_booked = True
             for seat in selected_seats:
-                bus['detailed_bookings'][date_str][seat] = booking_data
+                if seat not in bus['detailed_bookings'][date_str]:
+                    all_already_booked = False
+                    bus['detailed_bookings'][date_str][seat] = booking_data
+            
+            # Update date_bookings accurately (no duplicates)
+            bus['date_bookings'][date_str] = list(bus['detailed_bookings'][date_str].keys())
             
             bus_found = bus
             break
@@ -369,10 +374,11 @@ def booking_confirmation():
     booking_data['route'] = f"{bus_found['source']} → {bus_found['destination']}"
     booking_data['status'] = 'confirmed'
     
-    # Save to global history
+    # Save to global history (Deduplicate based on transaction ID)
     all_bookings = load_bookings()
-    all_bookings.append(booking_data)
-    save_bookings(all_bookings)
+    if not any(b.get('transaction_id') == booking_data['transaction_id'] for b in all_bookings):
+        all_bookings.append(booking_data)
+        save_bookings(all_bookings)
     
     send_ticket_email(
         booking_data['email'], booking_data['passenger_name'], 
@@ -410,8 +416,9 @@ def admin_dashboard():
     # Calculate per-bus bookings (active only)
     for bus in buses:
         bus_booked_count = 0
-        for date, seats in bus.get('date_bookings', {}).items():
-            bus_booked_count += len(seats)
+        detailed_all_dates = bus.get('detailed_bookings', {})
+        for date, seats_data in detailed_all_dates.items():
+            bus_booked_count += len(seats_data)
         bus['total_bookings'] = bus_booked_count
             
     return render_template('admin_dashboard.html', buses=buses, 
@@ -447,8 +454,8 @@ def admin_bus_details(bus_id):
     else:
         date_str = today
 
-    date_bookings = bus.get('date_bookings', {}).get(date_str, [])
     detailed = bus.get('detailed_bookings', {}).get(date_str, {})
+    date_bookings = list(detailed.keys())
     
     seat_labels = []
     total_seats_val = bus['available_seats']
