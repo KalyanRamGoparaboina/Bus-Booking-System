@@ -441,6 +441,26 @@ def admin_bus_details(bus_id):
                            seat_labels=seat_labels, day_revenue=day_revenue,
                            booked_dates=booked_dates)
 
+@app.route('/admin/cancel_seat/<int:bus_id>/<string:date>/<string:seat_label>', methods=['POST'])
+def cancel_seat(bus_id, date, seat_label):
+    buses = load_buses()
+    for bus in buses:
+        if bus['id'] == bus_id:
+            # 1. Remove from simple lookup
+            if date in bus.get('date_bookings', {}):
+                if seat_label in bus['date_bookings'][date]:
+                    bus['date_bookings'][date].remove(seat_label)
+            
+            # 2. Remove from detailed info
+            if date in bus.get('detailed_bookings', {}):
+                if seat_label in bus['detailed_bookings'][date]:
+                    del bus['detailed_bookings'][date][seat_label]
+            
+            save_buses(buses)
+            break
+            
+    return redirect(url_for('admin_bus_details', bus_id=bus_id, date=date))
+
 @app.route('/admin/add_bus', methods=['GET', 'POST'])
 def add_bus():
     if request.method == 'POST':

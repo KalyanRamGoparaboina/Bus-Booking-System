@@ -346,6 +346,17 @@
                 <p style="text-align: center; font-size: 0.75rem; color: #999; margin-top: 8px;">Click image to
                     expand</p>
             </div>
+
+            <!-- Cancel Button -->
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
+                <form id="cancel-form" method="POST"
+                    onsubmit="return confirm('⚠️ WARNING: This will PERMANENTLY delete this booking and make the seat available again. Continue?');">
+                    <button type="submit" class="btn"
+                        style="width: 100%; background: #c62828; color: white; padding: 12px; font-weight: 700; border-radius: 8px;">
+                        ❌ Cancel Booking
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -362,6 +373,8 @@
 
 <script>
     const detailedData = {{ detailed| tojson | safe }};
+    const busId = "{{ bus.id }}";
+    const travelDate = "{{ date }}";
 
     function showUserDetails(seatLabel) {
         const data = detailedData[seatLabel];
@@ -373,6 +386,9 @@
         document.getElementById('info-email').textContent = data.email;
         document.getElementById('info-tx').textContent = data.transaction_id;
         document.getElementById('info-amt').textContent = '₹' + data.amount;
+
+        // Set cancel form action
+        document.getElementById('cancel-form').action = `/admin/cancel_seat/${busId}/${travelDate}/${seatLabel}`;
 
         if (data.screenshot) {
             document.getElementById('receipt-box').style.display = 'block';
