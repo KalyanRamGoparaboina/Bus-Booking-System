@@ -400,22 +400,19 @@ def my_bookings():
 @app.route('/admin')
 def admin_dashboard():
     buses = load_buses()
-    # Basic summary
-    total_revenue = 0
-    total_seats_booked = 0
+    all_bookings = load_bookings()
+    
+    # Calculate global stats accurately from history
+    confirmed_bookings = [b for b in all_bookings if b.get('status') == 'confirmed']
+    total_revenue = sum(float(b.get('amount', 0)) for b in confirmed_bookings)
+    total_seats_booked = sum(len(b.get('seats', [])) for b in confirmed_bookings)
+    
+    # Calculate per-bus bookings (active only)
     for bus in buses:
         bus_booked_count = 0
         for date, seats in bus.get('date_bookings', {}).items():
-            count = len(seats)
-            total_seats_booked += count
-            bus_booked_count += count
+            bus_booked_count += len(seats)
         bus['total_bookings'] = bus_booked_count
-        
-        for date, details in bus.get('detailed_bookings', {}).items():
-            unique_tx = {}
-            for seat, info in details.items():
-                unique_tx[info['transaction_id']] = info['amount']
-            total_revenue += sum(unique_tx.values())
             
     return render_template('admin_dashboard.html', buses=buses, 
                            total_revenue=total_revenue, 
