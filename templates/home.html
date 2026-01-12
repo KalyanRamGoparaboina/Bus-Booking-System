@@ -1,64 +1,394 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Bus Booking System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-    <script src="{{ url_for('static', filename='js/home.js') }}" defer></script>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <h1>Bus Booking System</h1>
-            <nav>
-                <a href="/" class="home-btn">Home</a> <!-- Styled Home button -->
-                {% if 'username' in session %}
-                    <span>Welcome, {{ session['username'] }}!</span>
-                    <form action="{{ url_for('logout') }}" method="POST" style="display:inline;">
-                        <button type="submit" class="auth-btn">Logout</button>
-                    </form>
-                {% else %}
-                    <a href="/login" class="auth-btn">Login</a>
-                    <a href="/register" class="auth-btn">Sign Up</a>
-                {% endif %}
-            </nav>
-        </div>
-    </header>
+{% extends "base.html" %}
 
-    <section class="hero">
-        <div class="hero-content">
-            <h2>Travel with Comfort and Ease</h2>
-            <p>Find the best bus routes, book tickets, and enjoy a smooth journey.</p>
-        </div>
-    </section>
+{% block title %}Home - Valmiki Travels{% endblock %}
 
-    <section class="search-section">
-        <div class="container">
-            <h2>Find Your Bus</h2>
-            <form class="search-form" action="{{ url_for('search') }}" method="POST">
+{% block extra_css %}
+<style>
+    .animated-hero {
+        height: 100vh;
+        background: linear-gradient(135deg, #1a237e 0%, #534bae 100%);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .road {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 150px;
+        background: #2c2c2c;
+        border-top: 4px solid #ffd700;
+    }
+
+    .road::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: repeating-linear-gradient(to right,
+                white 0px,
+                white 40px,
+                transparent 40px,
+                transparent 80px);
+        animation: roadMove 2s linear infinite;
+    }
+
+    @keyframes roadMove {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-80px);
+        }
+    }
+
+    .bus-container {
+        position: absolute;
+        bottom: 160px;
+        left: -300px;
+        animation: busMove 15s linear infinite;
+    }
+
+    @keyframes busMove {
+        0% {
+            left: -300px;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    .bus {
+        width: 250px;
+        height: 120px;
+        position: relative;
+    }
+
+    .bus-body {
+        width: 100%;
+        height: 80px;
+        background: linear-gradient(to bottom, #ff6b6b 0%, #ee5a6f 100%);
+        border-radius: 15px 15px 5px 5px;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .bus-top {
+        width: 60%;
+        height: 25px;
+        background: linear-gradient(to bottom, #ff8787 0%, #ff6b6b 100%);
+        border-radius: 10px 10px 0 0;
+        position: absolute;
+        top: -25px;
+        left: 20%;
+    }
+
+    .bus-window {
+        width: 30px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.3);
+        border: 2px solid #fff;
+        border-radius: 3px;
+        position: absolute;
+        top: 15px;
+    }
+
+    .bus-window:nth-child(1) {
+        left: 20px;
+    }
+
+    .bus-window:nth-child(2) {
+        left: 60px;
+    }
+
+    .bus-window:nth-child(3) {
+        left: 100px;
+    }
+
+    .bus-window:nth-child(4) {
+        left: 140px;
+    }
+
+    .bus-window:nth-child(5) {
+        left: 180px;
+    }
+
+    .bus-wheel {
+        width: 35px;
+        height: 35px;
+        background: #2c2c2c;
+        border-radius: 50%;
+        position: absolute;
+        bottom: -15px;
+        border: 4px solid #555;
+        animation: wheelRotate 0.5s linear infinite;
+    }
+
+    @keyframes wheelRotate {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .bus-wheel:nth-child(6) {
+        left: 30px;
+    }
+
+    .bus-wheel:nth-child(7) {
+        right: 30px;
+    }
+
+    .bus-banner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 215, 0, 0.95);
+        padding: 8px 20px;
+        border-radius: 5px;
+        font-weight: 800;
+        font-size: 18px;
+        color: #1a237e;
+        letter-spacing: 2px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        border: 2px solid #1a237e;
+    }
+
+    .hero-content-overlay {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        color: white;
+        max-width: 800px;
+        padding: 40px;
+    }
+
+    .hero-content-overlay h1 {
+        font-size: 4rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        animation: fadeInDown 1s ease;
+    }
+
+    .hero-content-overlay p {
+        font-size: 1.5rem;
+        margin-bottom: 40px;
+        opacity: 0.95;
+        animation: fadeInUp 1s ease 0.3s both;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .scroll-indicator {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 2rem;
+        animation: bounce 2s infinite;
+        z-index: 10;
+    }
+
+    @keyframes bounce {
+
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        40% {
+            transform: translateX(-50%) translateY(-20px);
+        }
+
+        60% {
+            transform: translateX(-50%) translateY(-10px);
+        }
+    }
+
+    .qr-code-container {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        z-index: 1000;
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        animation: slideInRight 1s ease;
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .qr-code-container img {
+        width: 150px;
+        height: 150px;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .qr-code-container p {
+        font-size: 0.75rem;
+        color: var(--text-light);
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .qr-code-container .qr-title {
+        font-size: 0.85rem;
+        color: var(--primary-color);
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- QR Code in Top Right Corner -->
+<div class="qr-code-container">
+    <div class="qr-title">Scan to Visit</div>
+    <img src="{{ qr_code }}" alt="Website QR Code">
+    <p>VALMIKI TRAVELS</p>
+</div>
+
+<section class="animated-hero">
+    <div class="bus-container">
+        <div class="bus">
+            <div class="bus-top"></div>
+            <div class="bus-body">
+                <div class="bus-window"></div>
+                <div class="bus-window"></div>
+                <div class="bus-window"></div>
+                <div class="bus-window"></div>
+                <div class="bus-window"></div>
+                <div class="bus-banner">VALMIKI TRAVELS</div>
+            </div>
+            <div class="bus-wheel"></div>
+            <div class="bus-wheel"></div>
+        </div>
+    </div>
+
+    <div class="road"></div>
+
+    <div class="hero-content-overlay">
+        <h1>Welcome to VALMIKI TRAVELS</h1>
+        <p>Experience comfort, safety, and reliability on every journey</p>
+        <a href="#search-section" class="btn btn-secondary" style="padding: 18px 40px; font-size: 1.2rem;">Book Your
+            Journey</a>
+    </div>
+
+    <div class="scroll-indicator">↓</div>
+</section>
+
+<div class="container" id="search-section">
+    <section class="search-container glass animate-fade" style="margin-top: -80px;">
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--primary-color);">Find Your Bus</h2>
+        <form class="search-form" action="{{ url_for('search') }}" method="POST">
+            <div class="form-group">
+                <label>From</label>
                 <select name="source" required>
                     <option value="" disabled selected>Select Source</option>
                     <option value="Hyderabad">Hyderabad</option>
                     <option value="Bangalore">Bangalore</option>
                     <option value="Chennai">Chennai</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label>To</label>
                 <select name="destination" required>
                     <option value="" disabled selected>Select Destination</option>
                     <option value="Hyderabad">Hyderabad</option>
                     <option value="Bangalore">Bangalore</option>
                     <option value="Chennai">Chennai</option>
                 </select>
-                <input type="date" name="date" required>
-                <button type="submit">Search</button>
-            </form>
-        </div>
+            </div>
+            <div class="form-group">
+                <label>Date of Journey</label>
+                <input type="date" name="date" required min="{{ now }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Search Buses</button>
+        </form>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Bus Booking System. All rights reserved.</p>
+    <section style="margin-top: 80px; margin-bottom: 80px; text-align: center;" class="animate-fade">
+        <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Why travel with VALMIKI TRAVELS?</h2>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+            <div class="glass" style="padding: 40px;">
+                <div style="font-size: 3rem; margin-bottom: 20px;">🛡️</div>
+                <h3>Safe & Secure</h3>
+                <p style="opacity: 0.7; margin-top: 10px;">Highest safety standards with verified operators and 24/7
+                    emergency support.</p>
+            </div>
+            <div class="glass" style="padding: 40px;">
+                <div style="font-size: 3rem; margin-bottom: 20px;">⚡</div>
+                <h3>Instant Booking</h3>
+                <p style="opacity: 0.7; margin-top: 10px;">Select your preferred seat and pay securely in under 60
+                    seconds.</p>
+            </div>
+            <div class="glass" style="padding: 40px;">
+                <div style="font-size: 3rem; margin-bottom: 20px;">🛋️</div>
+                <h3>Premium Comfort</h3>
+                <p style="opacity: 0.7; margin-top: 10px;">Curated list of luxury sleepers and AC buses for a
+                    fatigue-free journey.</p>
+            </div>
         </div>
-    </footer>
-</body>
-</html>
+    </section>
+</div>
+
+<script>
+    // Smooth scroll to search section
+    document.querySelector('a[href="#search-section"]').addEventListener('click', function (e) {
+        e.preventDefault();
+        document.getElementById('search-section').scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+{% endblock %}

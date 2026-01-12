@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Valmiki Travels{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                    d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7c0 1.1.9 2 2 2h10">
+                </path>
+                <circle cx="7" cy="17" r="2"></circle>
+                <circle cx="17" cy="17" r="2"></circle>
+            </svg>
+            VALMIKI TRAVELS
+        </div>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Home</a>
+            {% if session.get('username') %}
+            <a href="/my_bookings" class="nav-link">My Bookings</a>
+            <span class="nav-link" style="opacity: 0.7;">Hi, {{ session['username'] }}</span>
+            <form action="/logout" method="POST" style="display: inline;">
+                <button type="submit" class="nav-link"
+                    style="background: none; border: none; cursor: pointer; color: white;">Logout</button>
+            </form>
+            {% else %}
+            <a href="/login" class="nav-link">Login</a>
+            <a href="/register" class="nav-link">Register</a>
+            {% endif %}
+            <a href="/admin" class="nav-link"
+                style="background: rgba(255,215,0,0.2); border-radius: 4px; padding: 5px 10px;">Admin</a>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer style="padding: 60px 0; background: var(--primary-dark); color: white; margin-top: 80px;">
+        <div class="container" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;">
+            <div>
+                <h3>VALMIKI TRAVELS</h3>
+                <p style="opacity: 0.7; margin-top: 20px;">Your trusted partner for comfortable and safe bus journeys
+                    across the country. Reliable schedules, premium fleets, and easy booking.</p>
+                <p
+                    style="opacity: 0.8; margin-top: 15px; font-size: 0.9rem; border-left: 3px solid #ffd700; padding-left: 15px;">
+                    <strong>Experienced Drivers:</strong> Every bus is operated by two highly experienced drivers with
+                    5-10 years of professional driving experience, ensuring your safety throughout the journey.
+                </p>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <ul
+                    style="list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; opacity: 0.7;">
+                    <li>About Us</li>
+                    <li>Careers</li>
+                    <li>Privacy Policy</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Support</h4>
+                <ul
+                    style="list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; opacity: 0.7;">
+                    <li>Help Center</li>
+                    <li><strong>Contact Us:</strong> 8106142645</li>
+                    <li>Terms of Service</li>
+                </ul>
+            </div>
+        </div>
+        <div class="container"
+            style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; opacity: 0.5; font-size: 0.9rem;">
+            &copy; 2026 VALMIKI TRAVELS. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Smooth reveal for elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-fade');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                }, index * 200);
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings - VALMIKI TRAVELS{% endblock %}
+
+{% block content %}
+<div class="container animate-fade" style="margin-top: 60px; max-width: 1000px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+        <h1 style="color: var(--primary-color);">My Booking History</h1>
+        <div
+            style="font-size: 0.9rem; background: var(--primary-color); color: white; padding: 5px 15px; border-radius: 20px;">
+            Total Bookings: {{ bookings|length }}
+        </div>
+    </div>
+
+    {% if bookings %}
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        {% for booking in bookings|sort(attribute='timestamp', reverse=True) %}
+        <div class="glass"
+            style="padding: 25px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: center;">
+            <div>
+                <h3 style="color: var(--primary-color);">{{ booking.bus_name }}</h3>
+                <p style="font-weight: 600; font-size: 0.9rem; margin-top: 5px;">{{ booking.route }}</p>
+                <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 3px;">Date: {{ booking.date }}</p>
+            </div>
+            <div>
+                <p style="font-size: 0.85rem;"><span style="color: var(--text-light);">Seats:</span> <strong>{{
+                        booking.seats|join(', ') }}</strong></p>
+                <p style="font-size: 0.85rem;"><span style="color: var(--text-light);">Passenger:</span> {{
+                    booking.passenger_name }}</p>
+                <p style="font-size: 0.85rem;"><span style="color: var(--text-light);">Paid:</span> <strong
+                        style="color: #2e7d32;">₹{{ booking.amount }}</strong></p>
+            </div>
+            <div style="text-align: right;">
+                <div
+                    style="display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 8px 15px; border-radius: 6px; font-weight: 700; font-size: 0.8rem;">
+                    CONFIRMED ✓
+                </div>
+                <p style="font-size: 0.7rem; color: var(--text-light); margin-top: 8px;">TX ID: {{
+                    booking.transaction_id }}</p>
+                {% if booking.screenshot %}
+                <a href="{{ url_for('static', filename='uploads/payments/' + booking.screenshot) }}" target="_blank"
+                    style="font-size: 0.75rem; color: var(--primary-color); display: block; margin-top: 10px;">View
+                    Payment Receipt</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="glass" style="padding: 100px; text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">📄</div>
+        <h2>No bookings found yet</h2>
+        <p style="color: var(--text-light); margin-top: 10px;">Looks like you haven't booked any journeys with us yet.
+        </p>
+        <a href="/" class="btn btn-primary" style="display: inline-block; margin-top: 30px;">Book a Bus Now</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

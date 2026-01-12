@@ -1,96 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passenger Information - Bus Booking System</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #004d99;
-            color: white;
-            padding: 15px 0;
-            text-align: center;
-        }
-        .container {
-            width: 90%;
-            margin: auto;
-            max-width: 800px;
-        }
-        form {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        input[type="text"], input[type="email"], input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        input[type="submit"] {
-            background-color: #004d99;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-        input[type="submit"]:hover {
-            background-color: #003366;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Bus Booking System</h1>
-    </header>
+{% extends "base.html" %}
 
-    <section>
-        <div class="container">
-            <h2>Passenger Information</h2>
-            <form action="" method="post">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-                <br>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-                <br>
-                <label for="phone_number">Phone Number:</label>
-                <input type="text" id="phone_number" name="phone_number" required>
-                <br>
-                <label for="age">Age:</label>
-                <input type="number" id="age" name="age" required>
-                <br>
-                <label for="gender">Gender:</label>
-                <select id="gender" name="gender" required>
-                    <option value="">Select</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-                <br>
-                <input type="submit" value="Continue to Payment">
-            </form>
-        </div>
-    </section>
-</body>
-</html>
+{% block title %}Passenger Info - VALMIKI TRAVELS{% endblock %}
+
+{% block content %}
+<div class="container animate-fade" style="max-width: 600px; margin-top: 60px;">
+    <div class="glass" style="padding: 40px;">
+        <h2 style="margin-bottom: 30px; text-align: center;">Passenger Details</h2>
+        <form action="" method="POST">
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Full Name</label>
+                <input type="text" name="name" placeholder="As per ID proof" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" name="age" min="1" max="120" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Phone Number</label>
+                <input type="tel" name="phone_number" placeholder="10-digit mobile number" pattern="[0-9]{10}"
+                    title="Please enter a 10-digit phone number" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 30px;">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="For ticket confirmation" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Proceed to Payment</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

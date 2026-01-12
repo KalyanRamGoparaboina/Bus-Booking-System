@@ -1,36 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Bus</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_bus.css') }}">
-</head>
-<body>
-    <h1>Add New Bus</h1>
-    <form method="post">
-        <label for="name">Bus Name:</label>
-        <input type="text" id="name" name="name" required>
-        
-        <label for="departure">Departure Time:</label>
-        <input type="datetime-local" id="departure" name="departure" required>
-        
-        <label for="arrival">Arrival Time:</label>
-        <input type="datetime-local" id="arrival" name="arrival" required>
-        
-        <label for="source">Source:</label>
-        <input type="text" id="source" name="source" required>
-        
-        <label for="destination">Destination:</label>
-        <input type="text" id="destination" name="destination" required>
-        
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" step="0.01" required>
-        
-        <label for="available_seats">Available Seats:</label>
-        <input type="number" id="available_seats" name="available_seats" required>
-        
-        <button type="submit">Add Bus</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Add Bus - Admin - VALMIKI TRAVELS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 700px; margin-top: 60px;">
+    <div class="glass" style="padding: 40px;">
+        <h1 style="text-align: center; margin-bottom: 30px; color: var(--primary-color);">Add New Bus</h1>
+
+        <form method="POST">
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Bus Name</label>
+                <input type="text" name="name" placeholder="e.g. Volvo Multi-Axle" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div class="form-group">
+                    <label>Departure Time</label>
+                    <input type="datetime-local" name="departure" required>
+                </div>
+                <div class="form-group">
+                    <label>Arrival Time</label>
+                    <input type="datetime-local" name="arrival" required>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div class="form-group">
+                    <label>Source</label>
+                    <select name="source" required>
+                        <option value="" disabled selected>Select Source</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Chennai">Chennai</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Destination</label>
+                    <select name="destination" required>
+                        <option value="" disabled selected>Select Destination</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Chennai">Chennai</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                <div class="form-group">
+                    <label>Price per Seat (₹)</label>
+                    <input type="number" name="price" step="0.01" min="100" placeholder="e.g. 1500" required>
+                </div>
+                <div class="form-group">
+                    <label>Seating Capacity</label>
+                    <select name="available_seats" required>
+                        <option value="" disabled selected>Select Capacity</option>
+                        <option value="32">32 Seats (Premium Sleeper)</option>
+                        <option value="44">44 Seats (Luxury Semi-Sleeper)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div
+                style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid var(--primary-color);">
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-color);">
+                    <strong>Note:</strong> This bus schedule will be automatically available for all future dates until
+                    you delete it. Each bus operates with 2 experienced drivers (5-10 years experience).
+                </p>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;">
+                Add Bus to Fleet
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/admin" style="color: var(--primary-color); font-weight: 600;">View All Buses</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

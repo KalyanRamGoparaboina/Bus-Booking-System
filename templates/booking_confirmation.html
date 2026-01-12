@@ -1,75 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Confirmation - Bus Booking System</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #004d99;
-            color: white;
-            padding: 15px 0;
-            text-align: center;
-        }
-        .container {
-            width: 90%;
-            margin: auto;
-            max-width: 1200px;
-        }
-        .back-btn {
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .back-btn:hover {
-            background-color: #005bb5;
-        }
-        .confirmation-container {
-            padding: 20px 0;
-        }
-        .confirmation {
-            max-width: 600px;
-            margin: auto;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
-        }
-        .confirmation p {
-            margin: 10px 0;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <h1>Bus Booking System</h1>
-            <a href="/"><button class="back-btn">Back to Home</button></a>
-        </div>
-    </header>
+{% extends "base.html" %}
 
-    <section class="confirmation-container">
-        <div class="container">
-            <div class="confirmation">
-                <h2>Booking Confirmation</h2>
-                <p><strong>Transaction ID:</strong> {{ transaction_id }}</p>
-                <p><strong>Total Amount:</strong> ₹{{ total_amount }}</p>
-                <p><strong>Selected Seats:</strong> {{ selected_seats|join(', ') }}</p>
-                <p><strong>Name:</strong> {{ name }}</p>
-                <p><strong>Email:</strong> {{ email }}</p>
-                <p><strong>Phone Number:</strong> {{ phone_number }}</p>
-                
-                <p>Thank you for booking with us</p>
-                <p>Get In Touch!!!</p>
+{% block title %}Booking Confirmed - Valmiki Travels{% endblock %}
+
+{% block content %}
+<div class="container animate-fade" style="max-width: 800px; margin-top: 60px; text-align: center;">
+    <div class="glass" style="padding: 50px;">
+        <div
+            style="width: 80px; height: 80px; background: #e8f5e9; color: #2e7d32; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 30px;">
+            ✓
+        </div>
+        <h1 style="color: #2e7d32; margin-bottom: 10px;">Booking Successful!</h1>
+        <p style="color: var(--text-light); margin-bottom: 40px;">Your ticket has been sent to <strong>{{ email
+                }}</strong></p>
+
+        <div
+            style="text-align: left; background: #fafafa; border-radius: 12px; padding: 35px; border: 1px dashed #ddd; margin-bottom: 40px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <!-- Bus & Route Section -->
+                <div
+                    style="grid-column: span 2; background: rgba(26, 35, 126, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <p style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Bus Name</p>
+                            <p style="font-weight: 800; font-size: 1.2rem; color: var(--primary-color);">{{ bus_name }}
+                            </p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Route</p>
+                            <p style="font-weight: 700; font-size: 1rem;">{{ route }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passenger Section -->
+                <div>
+                    <p
+                        style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">
+                        Passenger Name</p>
+                    <p style="font-weight: 700; font-size: 1.1rem; margin-top: 5px;">{{ passenger_name }}</p>
+                </div>
+                <div>
+                    <p
+                        style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">
+                        Transaction ID</p>
+                    <p style="font-weight: 700; font-size: 1.1rem; margin-top: 5px; color: var(--primary-color);">#{{
+                        transaction_id }}</p>
+                </div>
+
+                <!-- Travel Section -->
+                <div>
+                    <p
+                        style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">
+                        Seats Booked</p>
+                    <p style="font-weight: 700; font-size: 1.1rem; margin-top: 5px;">{{ seats|join(', ') }}</p>
+                </div>
+                <div>
+                    <p
+                        style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">
+                        Amount Paid</p>
+                    <p style="font-weight: 800; font-size: 1.2rem; margin-top: 5px; color: #2e7d32;">₹{{ amount }}</p>
+                </div>
+
+                <!-- Added Details Section -->
+                <div>
+                    <p
+                        style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">
+                        Journey Date</p>
+                    <p style="font-weight: 600; margin-top: 5px;">{{ date }}</p>
+                </div>
+                <div>
+                    <p
+                        style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">
+                        Contact Number</p>
+                    <p style="font-weight: 600; margin-top: 5px;">{{ phone }}</p>
+                </div>
             </div>
         </div>
-    </section>
-</body>
-</html>
+
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <button onclick="window.print()" class="btn btn-secondary" style="padding: 15px 30px;">Download
+                Ticket</button>
+            <a href="/" class="btn btn-primary" style="padding: 15px 30px;">Book Another Trip</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
