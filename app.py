@@ -98,6 +98,27 @@ def send_ticket_email(to_email, passenger_name, bus_name, seats, total_amount, t
         print(f"Email error: {e}")
         return False
 
+def send_cancellation_email(to_email, passenger_name, bus_name, seat_label, date, reason):
+    """Send cancellation notification (demo mode)"""
+    try:
+        subject = f"VALMIKI TRAVELS - Booking Cancelled for Seat {seat_label}"
+        print("\n" + "!"*60)
+        print("📧 CANCELLATION EMAIL SENT (DEMO MODE)")
+        print("!"*60)
+        print(f"To: {to_email}")
+        print(f"Subject: {subject}")
+        print("\nCancellation Details:")
+        print(f"  Passenger: {passenger_name}")
+        print(f"  Bus: {bus_name}")
+        print(f"  Date: {date}")
+        print(f"  Cancelled Seat: {seat_label}")
+        print(f"  Reason: {reason}")
+        print("!"*60 + "\n")
+        return True
+    except Exception as e:
+        print(f"Email error: {e}")
+        return False
+
 # ------------------ QR Code Generator ------------------
 def generate_qr_code(url):
     qr = qrcode.QRCode(version=1, box_size=10, border=4)
@@ -455,9 +476,13 @@ def cancel_seat(bus_id, date, seat_label):
     reason = request.form.get('reason', 'Payment verification failed')
     buses = load_buses()
     tx_id = None
+    affected_email = None
+    affected_name = None
+    bus_name = None
     
     for bus in buses:
         if bus['id'] == bus_id:
+            bus_name = bus['name']
             # 1. Remove from simple lookup
             if date in bus.get('date_bookings', {}):
                 if seat_label in bus['date_bookings'][date]:
@@ -466,7 +491,10 @@ def cancel_seat(bus_id, date, seat_label):
             # 2. Update detailed info and get transaction ID
             if date in bus.get('detailed_bookings', {}):
                 if seat_label in bus['detailed_bookings'][date]:
-                    tx_id = bus['detailed_bookings'][date][seat_label].get('transaction_id')
+                    booking_info = bus['detailed_bookings'][date][seat_label]
+                    tx_id = booking_info.get('transaction_id')
+                    affected_email = booking_info.get('email')
+                    affected_name = booking_info.get('passenger_name')
                     # Actually remove it from the bus layout
                     del bus['detailed_bookings'][date][seat_label]
             
@@ -480,7 +508,15 @@ def cancel_seat(bus_id, date, seat_label):
             if b.get('transaction_id') == tx_id:
                 b['status'] = 'cancelled'
                 b['cancellation_reason'] = reason
+                # Also note which specific seat was cancelled if it was a multi-seat booking
+                if 'cancelled_seats' not in b: b['cancelled_seats'] = []
+                if seat_label not in b['cancelled_seats']:
+                    b['cancelled_seats'].append(seat_label)
         save_bookings(all_bookings)
+        
+        # 4. Send cancellation email
+        if affected_email:
+            send_cancellation_email(affected_email, affected_name, bus_name, seat_label, date, reason)
             
     return redirect(url_for('admin_bus_details', bus_id=bus_id, date=date))
 
