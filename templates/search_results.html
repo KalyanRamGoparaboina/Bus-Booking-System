@@ -57,7 +57,14 @@
     <div class="glass bus-card animate-fade">
         <div>
             <h3 style="color: var(--primary-color);">{{ bus.name }}</h3>
-            <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 5px;">A/C Sleeper (2+1)</p>
+            <div style="display: flex; gap: 8px; margin-top: 5px; align-items: center;">
+                <p style="font-size: 0.85rem; color: var(--text-light);">A/C Sleeper (2+1)</p>
+                {% if bus.offer %}
+                <span
+                    style="background: linear-gradient(135deg, #ff8a00, #e52e71); color: white; padding: 2px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">⚡
+                    {{ bus.offer }}</span>
+                {% endif %}
+            </div>
         </div>
 
         <div style="text-align: center;">

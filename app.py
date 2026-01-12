@@ -29,6 +29,7 @@ def allowed_file(filename):
 DATA_FOLDER = 'data'
 BUSES_FILE = os.path.join(DATA_FOLDER, 'buses.json')
 USERS_FILE = os.path.join(DATA_FOLDER, 'users.json')
+BOOKINGS_FILE = os.path.join(DATA_FOLDER, 'bookings.json')
 
 if not os.path.exists(DATA_FOLDER):
     os.makedirs(DATA_FOLDER)
@@ -59,6 +60,19 @@ def load_users(filename=USERS_FILE):
 def save_users(users, filename=USERS_FILE):
     with open(filename, 'w') as f:
         json.dump(users, f, indent=4)
+
+def load_bookings(filename=BOOKINGS_FILE):
+    if not os.path.exists(filename):
+        return []
+    with open(filename, 'r') as f:
+        try:
+            return json.load(f)
+        except:
+            return []
+
+def save_bookings(bookings, filename=BOOKINGS_FILE):
+    with open(filename, 'w') as f:
+        json.dump(bookings, f, indent=4)
 
 # ------------------ Email Function ------------------
 def send_ticket_email(to_email, passenger_name, bus_name, seats, total_amount, transaction_id, source, destination, date):
@@ -332,6 +346,12 @@ def booking_confirmation():
     # Add bus info for display in confirmation page
     booking_data['bus_name'] = bus_found['name']
     booking_data['route'] = f"{bus_found['source']} → {bus_found['destination']}"
+    booking_data['status'] = 'confirmed'
+    
+    # Save to global history
+    all_bookings = load_bookings()
+    all_bookings.append(booking_data)
+    save_bookings(all_bookings)
     
     send_ticket_email(
         booking_data['email'], booking_data['passenger_name'], 
@@ -349,20 +369,9 @@ def my_bookings():
         return redirect(url_for('login'))
     
     current_user = session['username']
-    buses = load_buses()
-    user_bookings = []
+    all_bookings = load_bookings()
     
-    for bus in buses:
-        detailed = bus.get('detailed_bookings', {})
-        for date, seats_data in detailed.items():
-            # Collecting unique bookings (one entry per transaction)
-            seen_ids = set()
-            for seat, info in seats_data.items():
-                if info.get('user') == current_user and info.get('id') not in seen_ids:
-                    info['bus_name'] = bus['name']
-                    info['route'] = f"{bus['source']} → {bus['destination']}"
-                    user_bookings.append(info)
-                    seen_ids.add(info.get('id'))
+    user_bookings = [b for b in all_bookings if b.get('user') == current_user]
     
     return render_template('my_bookings.html', bookings=user_bookings)
 
@@ -443,7 +452,10 @@ def admin_bus_details(bus_id):
 
 @app.route('/admin/cancel_seat/<int:bus_id>/<string:date>/<string:seat_label>', methods=['POST'])
 def cancel_seat(bus_id, date, seat_label):
+    reason = request.form.get('reason', 'Payment verification failed')
     buses = load_buses()
+    tx_id = None
+    
     for bus in buses:
         if bus['id'] == bus_id:
             # 1. Remove from simple lookup
@@ -451,13 +463,24 @@ def cancel_seat(bus_id, date, seat_label):
                 if seat_label in bus['date_bookings'][date]:
                     bus['date_bookings'][date].remove(seat_label)
             
-            # 2. Remove from detailed info
+            # 2. Update detailed info and get transaction ID
             if date in bus.get('detailed_bookings', {}):
                 if seat_label in bus['detailed_bookings'][date]:
+                    tx_id = bus['detailed_bookings'][date][seat_label].get('transaction_id')
+                    # Actually remove it from the bus layout
                     del bus['detailed_bookings'][date][seat_label]
             
             save_buses(buses)
             break
+            
+    # 3. Update global history for the user
+    if tx_id:
+        all_bookings = load_bookings()
+        for b in all_bookings:
+            if b.get('transaction_id') == tx_id:
+                b['status'] = 'cancelled'
+                b['cancellation_reason'] = reason
+        save_bookings(all_bookings)
             
     return redirect(url_for('admin_bus_details', bus_id=bus_id, date=date))
 
@@ -475,6 +498,7 @@ def add_bus():
             'destination': request.form.get('destination'),
             'price': float(request.form.get('price')),
             'available_seats': int(request.form.get('available_seats')),
+            'offer': request.form.get('offer', ''), # New optional offer field
             'date_bookings': {},
             'detailed_bookings': {}
         }

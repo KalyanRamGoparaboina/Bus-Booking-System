@@ -351,6 +351,12 @@
             <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
                 <form id="cancel-form" method="POST"
                     onsubmit="return confirm('⚠️ WARNING: This will PERMANENTLY delete this booking and make the seat available again. Continue?');">
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 0.75rem; color: #666; font-weight: 700;">CANCELLATION REASON</label>
+                        <textarea name="reason" rows="2" placeholder="e.g. Payment screenshot is fake or blurred"
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.85rem; margin-top: 5px;"
+                            required></textarea>
+                    </div>
                     <button type="submit" class="btn"
                         style="width: 100%; background: #c62828; color: white; padding: 12px; font-weight: 700; border-radius: 8px;">
                         ❌ Cancel Booking
